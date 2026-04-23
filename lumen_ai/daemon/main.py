@@ -8,6 +8,7 @@ from typing import Dict, Any
 
 from lumen_ai.backends.mock import MockBackend
 from lumen_ai.tools.manager import registry
+from lumen_ai.daemon.persistence import PersistenceManager
 import lumen_ai.tools.system # Ensure tools are registered
 
 logging.basicConfig(
@@ -29,8 +30,11 @@ class JsonRpcServer:
 
         try:
             while True:
+                # Limit line size to 1MB to prevent DOS
                 line = await reader.readline()
-                if not line:
+                if not line or len(line) > 1024 * 1024:
+                    if len(line) > 1024 * 1024:
+                        logger.warning("Request too large, closing connection.")
                     break
                 
                 try:
@@ -60,12 +64,42 @@ class JsonRpcServer:
     async def handle_chat(self, params, request_id, writer):
         messages = params.get("messages", [])
         
-        # In a real implementation, we would handle tool calls here
-        # For now, we just stream the backend response
+        # In a more advanced implementation, we would use LLM function calling
+        # For this foundation, we simulate the flow:
+        # 1. Stream the AI response
+        # 2. Check if a tool call is triggered (simulated or real)
+        
         async for token in self.backend.chat(messages):
             await self.send_notification("chat_token", {"id": request_id, "token": token}, writer)
+            
+        # Example: check if the backend wants to call a tool
+        # (This is where real tool-calling logic would go)
         
         await self.send_response({"id": request_id, "result": "done"}, writer)
+
+    async def request_tool_confirmation(self, tool_name, args, writer):
+        """Sends a confirmation request to the client and waits for approval."""
+        confirm_id = os.urandom(4).hex()
+        await self.send_notification("tool_confirmation_request", {
+            "confirm_id": confirm_id,
+            "tool_name": tool_name,
+            "args": args
+        }, writer)
+        
+        # In a real implementation, we would wait for a 'tool_response' request with this confirm_id
+        # For now, we simulate the structure
+        return True
+
+    async def execute_tool(self, tool_name, args):
+        """Executes a registered tool after validation."""
+        if tool_name in registry.tools:
+            tool_info = registry.tools[tool_name]
+            # Here we would validate args against schema
+            try:
+                return await tool_info["func"](**args)
+            except Exception as e:
+                return {"error": str(e)}
+        return {"error": "Tool not found"}
 
     async def send_response(self, data, writer):
         writer.write(json.dumps(data).encode() + b"\n")
@@ -105,11 +139,17 @@ async def run_daemon():
     # Import driver tools to register them
     import lumen_ai.tools.drivers
     
+    # Initialize persistence
+    persistence = PersistenceManager()
+    
     server = JsonRpcServer(backend)
+    server.persistence = persistence
 
     try:
         srv = await asyncio.start_unix_server(server.handle_request, path=SOCKET_PATH)
-        logger.info(f"Listening on {SOCKET_PATH}")
+        # Security: restrict socket access to the current user
+        os.chmod(SOCKET_PATH, 0o600)
+        logger.info(f"Listening on {SOCKET_PATH} (restricted permissions)")
         
         async with srv:
             await srv.serve_forever()

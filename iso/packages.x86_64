@@ -68,3 +68,9 @@ fastfetch
 python
 python-pip
 flatpak
+calamares
+kpmcore
+ckbcomp
+hwinfo
+qt6-svg
+qt6-declarative

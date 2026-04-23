@@ -1,0 +1,31 @@
+---
+componentName:  lumen
+
+welcomeStyleCalamares:   false
+
+welcomeExpandingLogo:   true
+
+windowSize: 800,600
+
+strings:
+    productName:         Lumen
+    shortProductName:    Lumen
+    version:             0.1 Alpha
+    shortVersion:        0.1
+    versionedName:       Lumen 0.1 Alpha
+    shortVersionedName:  Lumen 0.1
+    bootloaderEntryName: Lumen
+    productUrl:          https://github.com/Gip1111/lumen
+    supportUrl:          https://github.com/Gip1111/lumen/issues
+    releaseNotesUrl:     https://github.com/Gip1111/lumen/releases
+
+images:
+    productLogo:         "lumen-logo.png"
+    productIcon:         "lumen-logo.png"
+    productWelcome:      "welcome.png"
+
+style:
+   sidebarBackground:    "#1a1a1a"
+   sidebarText:          "#ffffff"
+   sidebarTextSelect:    "#3498db"
+   sidebarTextHighlight: "#3498db"

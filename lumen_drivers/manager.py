@@ -40,4 +40,27 @@ class DriverManager:
         
         return recommendations
 
+    def install_driver(self, driver_name: str) -> Dict[str, str]:
+        """Installs a driver using pkexec pacman."""
+        # Map driver names to actual packages
+        package_map = {
+            "nvidia": ["nvidia", "nvidia-utils", "nvidia-settings"],
+            "mesa / amdgpu": ["mesa", "xf86-video-amdgpu"],
+            "mesa / i915": ["mesa", "xf86-video-intel"]
+        }
+        
+        packages = package_map.get(driver_name)
+        if not packages:
+            return {"error": f"Unknown driver: {driver_name}"}
+        
+        try:
+            # pkexec will trigger a polkit authentication dialog
+            cmd = ['pkexec', 'pacman', '-S', '--noconfirm'] + packages
+            subprocess.run(cmd, check=True)
+            return {"success": True, "message": f"Installed {driver_name}"}
+        except subprocess.CalledProcessError as e:
+            return {"error": f"Installation failed: {e}"}
+        except FileNotFoundError:
+            return {"error": "pkexec or pacman not found"}
+
 driver_manager = DriverManager()

@@ -24,3 +24,17 @@ async def scan_hardware():
 )
 async def get_driver_recommendations():
     return {"recommendations": driver_manager.get_recommendations()}
+@tool(
+    name="install_recommended_driver",
+    description="Install a recommended driver for a specific hardware device.",
+    schema={
+        "type": "object",
+        "properties": {
+            "driver_name": {"type": "string", "description": "The name of the driver to install (e.g., 'nvidia')"}
+        },
+        "required": ["driver_name"]
+    },
+    requires_confirmation=True
+)
+async def install_recommended_driver(driver_name: str):
+    return driver_manager.install_driver(driver_name)
