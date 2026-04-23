@@ -24,6 +24,24 @@ class DriverManager:
         except FileNotFoundError:
             return [{"error": "lspci not found"}]
 
+    def scan_usb(self) -> List[Dict[str, str]]:
+        """Scans USB bus for hardware."""
+        try:
+            result = subprocess.run(['lsusb'], capture_output=True, text=True)
+            devices = []
+            for line in result.stdout.splitlines():
+                # Format: Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+                match = re.search(r'ID (.*?):(.*?) (.*)', line)
+                if match:
+                    devices.append({
+                        "vendor_id": match.group(1),
+                        "product_id": match.group(2),
+                        "name": match.group(3)
+                    })
+            return devices
+        except FileNotFoundError:
+            return [{"error": "lsusb not found"}]
+
     def get_recommendations(self) -> List[Dict[str, str]]:
         """Returns recommended drivers based on scan."""
         devices = self.scan_pci()

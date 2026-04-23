@@ -75,6 +75,12 @@ ApplicationWindow {
                         }
                     }
                 }
+
+                Button {
+                    text: "🗑️"
+                    flat: true
+                    onClicked: bridge.clearHistory()
+                }
             }
 
             // Chat/Result Area
@@ -82,7 +88,7 @@ ApplicationWindow {
                 id: chatList
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                visible: count > 0
+                visible: count > 0 && !confirmationPopup.opened
                 spacing: 10
                 model: chatModel
                 delegate: Column {
@@ -104,6 +110,76 @@ ApplicationWindow {
                         wrapMode: Text.WordWrap
                     }
                 }
+            }
+        }
+    }
+
+    // Confirmation Popup
+    Popup {
+        id: confirmationPopup
+        anchors.centerIn: parent
+        width: 400
+        height: 200
+        modal: true
+        focus: true
+        closePolicy: Popup.NoAutoClose
+        
+        background: Rectangle {
+            color: "#cc1a1a1a"
+            radius: 12
+            border.color: "#33ffffff"
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 20
+            spacing: 20
+
+            Text {
+                id: confirmText
+                text: "Permission Required"
+                color: "white"
+                font.pixelSize: 18
+                font.bold: true
+            }
+
+            Text {
+                id: confirmDetails
+                text: "Lumen wants to execute a system command."
+                color: "#cccccc"
+                font.pixelSize: 14
+                wrapMode: Text.WordWrap
+                Layout.fillWidth: true
+            }
+
+            RowLayout {
+                Layout.alignment: Qt.AlignRight
+                spacing: 10
+
+                Button {
+                    text: "Deny"
+                    onClicked: {
+                        bridge.respondToConfirmation(false)
+                        confirmationPopup.close()
+                    }
+                }
+
+                Button {
+                    text: "Allow"
+                    onClicked: {
+                        bridge.respondToConfirmation(true)
+                        confirmationPopup.close()
+                    }
+                }
+            }
+        }
+
+        // Connect to bridge signals
+        Connections {
+            target: bridge
+            function onShowConfirmation(message) {
+                confirmDetails.text = message
+                confirmationPopup.open()
             }
         }
     }

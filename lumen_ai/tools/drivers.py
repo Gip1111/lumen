@@ -14,6 +14,15 @@ async def scan_hardware():
     return {"devices": driver_manager.scan_pci()}
 
 @tool(
+    name="scan_usb",
+    description="Scan the system for USB devices.",
+    schema={"type": "object", "properties": {}},
+    requires_confirmation=False
+)
+async def scan_usb():
+    return {"devices": driver_manager.scan_usb()}
+
+@tool(
     name="get_driver_recommendations",
     description="Get recommended drivers for the detected hardware.",
     schema={

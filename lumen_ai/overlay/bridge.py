@@ -41,9 +41,15 @@ class ChatModel(QAbstractListModel):
             self._messages[-1]["content"] += content
             self.dataChanged.emit(self.index(len(self._messages)-1, 0), self.index(len(self._messages)-1, 0))
 
+    def clear(self):
+        self.beginResetModel()
+        self._messages = []
+        self.endResetModel()
+
 class Bridge(QObject):
     querySent = Signal(str)
     responseReceived = Signal(str)
+    showConfirmation = Signal(str)
 
     def __init__(self, chat_model):
         super().__init__()
@@ -52,10 +58,48 @@ class Bridge(QObject):
         self.loop = asyncio.new_event_loop()
         self.thread = threading.Thread(target=self._run_event_loop, daemon=True)
         self.thread.start()
+        self.current_writer = None
+        self.pending_confirmation_id = None
 
     def _run_event_loop(self):
         asyncio.set_event_loop(self.loop)
         self.loop.run_forever()
+
+    @Slot()
+    def clearHistory(self):
+        self.chat_model.clear()
+        # In a real implementation, we would also tell the daemon to clear the DB
+        asyncio.run_coroutine_threadsafe(self._send_simple_request("clear_history"), self.loop)
+
+    @Slot(bool)
+    def respondToConfirmation(self, approved):
+        if self.pending_confirmation_id and self.current_writer:
+            asyncio.run_coroutine_threadsafe(
+                self._send_confirmation_response(approved), 
+                self.loop
+            )
+
+    async def _send_confirmation_response(self, approved):
+        if self.current_writer:
+            resp = {
+                "jsonrpc": "2.0",
+                "id": self.pending_confirmation_id,
+                "result": {"approved": approved}
+            }
+            self.current_writer.write(json.dumps(resp).encode() + b"\n")
+            await self.current_writer.drain()
+            self.pending_confirmation_id = None
+
+    async def _send_simple_request(self, method):
+        try:
+            _, writer = await asyncio.open_unix_connection(self.socket_path)
+            req = {"jsonrpc": "2.0", "method": method, "id": os.urandom(4).hex()}
+            writer.write(json.dumps(req).encode() + b"\n")
+            await writer.drain()
+            writer.close()
+            await writer.wait_closed()
+        except:
+            pass
 
     @Slot(str)
     def sendQuery(self, text):
