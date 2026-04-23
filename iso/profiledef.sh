@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034
 
 iso_name="lumen"
-iso_label="LUMEN_$(date +%Y%m)"
+iso_label="LUMEN_ALPHA"
 iso_publisher="Lumen Project <https://github.com/lumen-os/lumen>"
 iso_application="Lumen Live/Installation CD"
 install_dir="lumen"
