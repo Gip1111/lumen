@@ -16,7 +16,7 @@ plasma-desktop
 sddm
 plasma-nm
 plasma-pa
-power-desktop
+power-profiles-daemon
 konsole
 dolphin
 ark
@@ -28,7 +28,6 @@ xf86-video-amdgpu
 xf86-video-ati
 xf86-video-intel
 xf86-video-nouveau
-xf86-video-vmware
 
 # Networking
 networkmanager
@@ -50,7 +49,7 @@ noto-fonts
 noto-fonts-cjk
 noto-fonts-emoji
 ttf-roboto
-ttf-inter
+inter-font
 
 # Lumen Specific (Placeholders for now)
 # lumen-ai
@@ -65,7 +64,7 @@ git
 wget
 curl
 htop
-neofetch
+fastfetch
 python
 python-pip
 flatpak
