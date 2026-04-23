@@ -127,3 +127,7 @@ object_script.*
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Ensure airootfs content is tracked
+!iso/airootfs/usr/bin/
+!iso/airootfs/usr/lib/
