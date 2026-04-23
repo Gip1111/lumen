@@ -1,0 +1,65 @@
+# Core System
+base
+linux
+linux-firmware
+amd-ucode
+intel-ucode
+
+# Desktop Environment (KDE Plasma 6)
+plasma-desktop
+sddm
+plasma-nm
+plasma-pa
+power-desktop
+konsole
+dolphin
+ark
+gwenview
+
+# Graphics Drivers
+mesa
+xf86-video-amdgpu
+xf86-video-ati
+xf86-video-intel
+xf86-video-nouveau
+xf86-video-vmware
+
+# Networking
+networkmanager
+network-manager-applet
+wireless_tools
+wpa_supplicant
+dialog
+
+# Audio/Video
+pipewire
+pipewire-alsa
+pipewire-pulse
+pipewire-jack
+gst-plugin-pipewire
+libpulse
+
+# Fonts
+noto-fonts
+noto-fonts-cjk
+noto-fonts-emoji
+ttf-roboto
+ttf-inter
+
+# Lumen Specific (Placeholders for now)
+# lumen-ai
+# lumen-drivers
+# lumen-desktop-theme
+
+# Utilities
+sudo
+nano
+vim
+git
+wget
+curl
+htop
+neofetch
+python
+python-pip
+flatpak

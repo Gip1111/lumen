@@ -1,0 +1,22 @@
+[project]
+name = "lumen-ai"
+version = "0.1.0"
+description = "Lumen AI Assistant Daemon and Tools"
+authors = [{ name = "Lumen Project Team" }]
+dependencies = [
+    "pydantic>=2.0",
+    "aiohttp>=3.9",
+    "pyyaml>=6.0",
+    "PySide6>=6.6.0",
+]
+
+[project.scripts]
+lumen-aid = "lumen_ai.daemon.main:main"
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true

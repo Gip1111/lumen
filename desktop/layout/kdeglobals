@@ -1,0 +1,13 @@
+[General]
+ColorScheme=LumenDark
+Name=Lumen Dark
+font=Inter,10,-1,5,50,0,0,0,0,0
+menuFont=Inter,10,-1,5,50,0,0,0,0,0
+toolBarFont=Inter,10,-1,5,50,0,0,0,0,0
+
+[KDE]
+LookAndFeelPackage=org.lumen.desktop
+SingleClick=false
+
+[Icons]
+Theme=breeze-dark

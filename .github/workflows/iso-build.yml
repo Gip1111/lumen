@@ -1,0 +1,51 @@
+name: Build Lumen ISO
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+      options: --privileged
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        pacman -Syu --noconfirm
+        pacman -S --noconfirm archiso xorriso libisoburn mtools squashfs-tools python python-pip git
+        # Install shim-signed for Secure Boot (assuming available in a repo or AUR)
+        # For this example, we'll use a placeholder or download it if needed.
+        # pacman -S --noconfirm shim-signed 
+
+    - name: Prepare build environment
+      run: |
+        mkdir -p out work
+        # Setup git for any submodule or AUR needs
+        git config --global --add safe.directory /__w/Lumen/Lumen
+
+    - name: Build ISO
+      run: |
+        # We use a custom script that handles archiso + secure boot
+        bash scripts/build-iso.sh
+
+    - name: Upload ISO Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: lumen-iso
+        path: out/*.iso
+
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v2
+      with:
+        files: out/*.iso
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

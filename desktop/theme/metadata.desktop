@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Lumen
+Comment=Lumen Desktop Theme
+Icon=lumen-logo
+Type=GlobalTheme
+X-KDE-ServiceTypes=Plasma/GlobalTheme
+X-KDE-PluginInfo-Author=Lumen Project
+X-KDE-PluginInfo-Email=contact@lumen.os
+X-KDE-PluginInfo-Name=org.lumen.desktop
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-License=GPL-3.0-or-later
