@@ -20,7 +20,7 @@ jobs:
     - name: Install dependencies
       run: |
         pacman -Syu --noconfirm
-        pacman -S --noconfirm archiso xorriso libisoburn mtools squashfs-tools python python-pip git
+        pacman -S --noconfirm archiso xorriso libisoburn mtools squashfs-tools python python-pip git grub
         # Install shim-signed for Secure Boot (assuming available in a repo or AUR)
         # For this example, we'll use a placeholder or download it if needed.
         # pacman -S --noconfirm shim-signed 
