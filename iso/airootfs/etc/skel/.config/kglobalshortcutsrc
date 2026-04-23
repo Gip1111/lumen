@@ -1,0 +1,7 @@
+[lumen-overlay.desktop]
+_k_friendly_name=Lumen AI Assistant
+launch-lumen=Meta+Space,none,Launch Lumen AI Assistant
+
+[khotkeys]
+_k_friendly_name=Custom Shortcuts
+{d03619b6-9b3a-4e90-a135-d03541604a43}=Meta+Space,none,Launch Lumen

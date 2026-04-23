@@ -10,6 +10,15 @@ ISO_PATH="${OUT_DIR}/${ISO_NAME}-${VERSION}-x86_64.iso"
 
 echo "--- Lumen Secure Boot ISO Build Pipeline ---"
 
+# 0. Copy custom code and config to airootfs
+echo "Step 0: Injecting Lumen custom logic into airootfs..."
+mkdir -p iso/airootfs/usr/lib/lumen
+cp -r lumen_ai iso/airootfs/usr/lib/lumen/
+cp -r lumen_drivers iso/airootfs/usr/lib/lumen/
+chmod +x iso/airootfs/usr/bin/lumen-overlay
+mkdir -p iso/airootfs/etc/systemd/system/multi-user.target.wants
+ln -sf /etc/systemd/system/lumen-aid.service iso/airootfs/etc/systemd/system/multi-user.target.wants/lumen-aid.service
+
 # 1. Build basic ISO using archiso
 echo "Step 1: Building base ISO with mkarchiso..."
 mkdir -p "${OUT_DIR}"

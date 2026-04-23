@@ -1,0 +1,13 @@
+[Unit]
+Description=Lumen AI Daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python /usr/lib/lumen/lumen_ai/daemon/main.py
+Environment=PYTHONPATH=/usr/lib/lumen
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

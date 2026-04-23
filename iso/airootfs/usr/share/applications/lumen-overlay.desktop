@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Lumen AI Assistant
+Exec=/usr/bin/lumen-overlay
+Icon=system-search
+Terminal=false
+Categories=System;Utility;
+Comment=Press Meta+Space to summon the AI Assistant
